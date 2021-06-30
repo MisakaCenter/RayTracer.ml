@@ -1,0 +1,3 @@
+(executable
+ (name ray)
+ (libraries base stdio stdlib core))
