@@ -2,19 +2,17 @@ open Array
 open Core
 open Vec
 
-type pixel = vec3
-
-let output_ppm_array (mc : int) (l : pixel array) (outc : Out_channel.t) =
+let output_ppm_array (mc : int) (l : vec3 array) (outc : Out_channel.t) =
   iter
     (fun x ->
       Printf.fprintf outc "%s\n"
         (to_string
-           ((fun y ->
+           ((fun yy ->
               new vec3
                 [|
-                  (float_of_int mc +. 0.99) *. y#x;
-                  (float_of_int mc +. 0.99) *. y#y;
-                  (float_of_int mc +. 0.99) *. y#z;
+                  (float_of_int mc +. 0.99) *. yy#x;
+                  (float_of_int mc +. 0.99) *. yy#y;
+                  (float_of_int mc +. 0.99) *. yy#z;
                 |])
               x)))
     l
