@@ -32,7 +32,7 @@ method hit (r: ray)(t_min : float)(t_max : float) (rcd: hit_record pointer) =
       end)
     else begin
       let p = at r root in
-        let outward_normal = (p -| center) /= radius in
+        let outward_normal = ((p -| center) /= radius) in
         (rcd ^:= (set_face_normal { p = p; t = root; normal = (p -| center) /= radius; front_face = true } r outward_normal));
         true
     end

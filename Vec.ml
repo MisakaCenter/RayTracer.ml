@@ -1,4 +1,7 @@
 open Array
+open Utils
+open Core
+open Float
 
 class vec3 (init : float array) =
   object
@@ -61,3 +64,11 @@ let to_string (v : vec3) =
   ^ Int.to_string (int_of_float v#y)
   ^ " "
   ^ Int.to_string (int_of_float v#z)
+
+let random_vec = new vec3 [|random_float 1.0; random_float 1.0; random_float 1.0|]
+let random_vec_n_m n m = new vec3 [|random_float_n_m n m; random_float_n_m n m; random_float_n_m n m|]
+
+let rec random_in_unit_sphere (aa: int) = 
+  let p = random_vec_n_m (-. 1.0) 1.0 in
+    if (p#length_squared >. 1.0) then 
+      random_in_unit_sphere aa else p

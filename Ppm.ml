@@ -13,9 +13,9 @@ type ppm = {
   content : vec3 array array;
 }
 
-let output pm target_file =
+let output pm target_file a =
   let outc = Out_channel.create target_file in
   Printf.fprintf outc "%s\n%d %d\n%d\n" pm.ppm_mode pm.pic_width pm.pic_height
     pm.max_color;
-  output_ppm_matrix pm.max_color pm.content outc;
+  output_ppm_matrix pm.max_color pm.content outc a;
   Out_channel.close outc

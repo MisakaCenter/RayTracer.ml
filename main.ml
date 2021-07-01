@@ -13,11 +13,13 @@ open Utils
 (* Image *)
 let aspect_ratio = 16.0 /. 9.0
 
-let image_width : int = 1000
+let image_width : int = 400
 
 let image_height : int = int_of_float (float_of_int image_width /. aspect_ratio)
 
 let color : int = 255
+
+let samples_per_pixel = 100
 
 let target_file : string = "./output/out.ppm"
 
@@ -39,26 +41,19 @@ let lower_left_corner =
   origin -| (horizontal /= 2.0) -| (vertical /= 2.0)
   -| new vec3 [| 0.0; 0.0; focal_length |]
 
-(* Sphere
-
-let hit_sphere (center : vec3) (radius : float) (r : ray) : float =
-  let oc = r#origin -| center in
-  let a = r#direction#length_squared in
-  let half_b = dot oc r#direction in
-  let c = oc#length_squared -. (radius *. radius) in
-  let discriminant = (half_b *. half_b) -. ( a *. c) in
-  if (Float.compare discriminant 0.0) < 0 then -1.0
-  else (-. half_b  -. sqrt(discriminant)) /. (2.0 *. a) *)
+let get_ray u v : ray = new ray origin (lower_left_corner +| (horizontal *= u) +| (vertical *= v) -| origin)
 
 (* Ray Color *)
 
-let ray_color (r : ray) (world : hittable_list) =
+let rec ray_color (r : ray) (world : hittable_list) (depth: int) =
+  if depth <= 0 then new vec3 [|0.0;0.0;0.0|] else
   let rcd =
     new_pointer
       { p = new vec3 [||]; normal = new vec3 [||]; t = 0.0; front_face = false }
   in
-  if !^(world#hit r 0.0 infinity rcd) then
-    (!^rcd.normal +| new vec3 [| 1.0; 1.0; 1.0 |]) *= 0.5
+  if !^(world#hit r 0.001 infinity rcd) then
+    let target = !^rcd.p +| !^rcd.normal +| random_in_unit_sphere 1 in
+      (ray_color (new ray (!^rcd.p) (target -| !^rcd.p)) world (depth - 1) ) *= 0.5
   else
     let unit_direction = unit_vector r#direction in
     let t = (unit_direction#y +. 1.0) *. 0.5 in
@@ -78,15 +73,16 @@ let basic (content : vec3 array array) : vec3 array array =
   for j = image_height - 1 downto 0 do
     if j % 20 = 0 then printf "Remaining: %d\n" j;
     for i = 0 to image_width - 1 do
-      let u = float_of_int i /. (float_of_int image_width -. 1.0) in
-      let v = float_of_int j /. (float_of_int image_height -. 1.0) in
-      let ray1 =
-        new ray
-          origin
-          (lower_left_corner +| (horizontal *= u) +| (vertical *= v) -| origin)
-      in
+      let pixel_color = new_pointer (new vec3 [|0.0;0.0;0.0|]) in
 
-      set (get content (image_height - j - 1)) i (ray_color ray1 world)
+      for _ = 0 to samples_per_pixel do 
+        let u = (float_of_int i +. random_float 1.0) /. (float_of_int image_width -. 1.0) in
+        let v = (float_of_int j +. random_float 1.0) /. (float_of_int image_height -. 1.0) in
+        let r = get_ray u v in
+        pixel_color ^:= (!^ pixel_color) +| ray_color r world max_depth;
+      done;
+
+      set (get content (image_height - j - 1)) i (!^ pixel_color)
     done
   done;
   content
@@ -103,3 +99,4 @@ output
         (make_matrix image_height image_width (new vec3 [| 0.0; 0.0; 0.0 |]));
   }
   target_file
+  samples_per_pixel
