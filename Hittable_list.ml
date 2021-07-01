@@ -4,6 +4,7 @@ open Array
 open Ray
 open Vec
 open Utils
+open Material
 
 class hittable_list (init : hittable array) =
   object

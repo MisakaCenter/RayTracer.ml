@@ -9,7 +9,8 @@ open Sphere
 open Hittable
 open Hittable_list
 open Utils
-
+open Camera
+open Material
 (* Image *)
 let aspect_ratio = 16.0 /. 9.0
 
@@ -31,7 +32,7 @@ let viewport_height = 2.0
 
 let viewport_width = aspect_ratio *. viewport_height
 
-let focal_length = 1.0
+let max_depth = 50
 
 let origin = new vec3 [| 0.0; 0.0; 0.0 |]
 

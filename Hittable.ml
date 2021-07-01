@@ -1,6 +1,9 @@
 open Base
 open Vec
 open Ray
+open Core
+open Float
+open Material
 open Utils
 open Core
 open Float

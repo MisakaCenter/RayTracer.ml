@@ -4,6 +4,8 @@ open Vec
 open Ray
 open Hittable
 open Utils
+open Float
+open Material
 
 class sphere cen r (m : material pointer) =
   object
