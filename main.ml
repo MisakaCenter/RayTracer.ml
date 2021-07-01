@@ -13,16 +13,16 @@ open Camera
 open Material
 (* Image *)
 let aspect_ratio = 16.0 /. 9.0
-let _ = Random.init 123341;;
+
 let image_width : int = 400
 
 let image_height : int = int_of_float (float_of_int image_width /. aspect_ratio)
 
 let color : int = 255
 
-let samples_per_pixel = 200
+let samples_per_pixel = 10
 
-let max_depth = 50
+let max_depth = 2
 
 let target_file : string = "./output/out.ppm"
 
@@ -57,6 +57,7 @@ let world =
   new hittable_list
     [|
       new sphere (new vec3 [| 0.0; 0.0; -1.0 |]) 0.5 (new_pointer (new lambertia (new vec3 [|0.8;0.8;0.0|]) 1));
+      new sphere (new vec3 [| 0.0; -100.5; -1.0 |]) 100.0 (new_pointer (new lambertia (new vec3 [|0.8;0.8;0.0|]) 1));
     |]
 
 (* Render *)

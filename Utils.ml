@@ -21,7 +21,7 @@ let ( ^:= ) p v =
 let new_pointer x = Pointer (ref x)
 
 (* random *)
-
+let _ = Random.init 123341;;
 let random_float n = float n
 
 let random_float_n_m n m = n +. (m -. n) *. (random_float 1.0)
