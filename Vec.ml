@@ -1,4 +1,7 @@
 open Array
+open Utils
+open Core
+open Float
 
 class vec3 (init : float array) =
   object
@@ -17,6 +20,10 @@ class vec3 (init : float array) =
 
     method length =
       sqrt ((get v 0 *. get v 0) +. (get v 1 *. get v 1) +. (get v 2 *. get v 2))
+
+    method near_zero = 
+      let s = 1e-8 in
+      (abs (get v 0) <. s) && (abs (get v 1) <. s) && (abs (get v 2) <. s)
   end
 
 let rev (x : vec3) : vec3 = new vec3 (map (fun x -> 0.0 -. x) x#l)
@@ -55,9 +62,29 @@ let dot (a : vec3) (b : vec3) =
 let unit_vector (a : vec3) =
   new vec3 [| a#x /. a#length; a#y /. a#length; a#z /. a#length |]
 
+
 let to_string (v : vec3) =
   Int.to_string (int_of_float v#x)
   ^ " "
   ^ Int.to_string (int_of_float v#y)
   ^ " "
   ^ Int.to_string (int_of_float v#z)
+
+let random_vec: vec3 = new vec3 [|
+  random_float 1.0; random_float 1.0; random_float 1.0
+|] 
+
+let random_vec_n_m n m: vec3 = new vec3 [|
+  random_float_n_m n m ; random_float_n_m n m ; random_float_n_m n m 
+|]
+
+let random_in_unit_sphere = 
+  let x = new_pointer (random_vec_n_m  (-. 1.0) 1.0) in
+    while (!^ x)#length >=. 1.0 do
+      x ^:= random_vec_n_m  (-. 1.0) 1.0
+    done;
+    !^ x
+
+let random_unit_vector = unit_vector random_in_unit_sphere
+
+let reflect (a:vec3) b = a -| (b *= ((dot a b) *. 2.0))
