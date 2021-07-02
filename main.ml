@@ -5,12 +5,12 @@ open Core
 open Vec
 open Ppm
 open Ray
-open Sphere
 open Hittable
 open Hittable_list
 open Utils
 open Setting
 open Camera
+open World
 
 (* Ray Color *)
 
@@ -39,26 +39,8 @@ let rec ray_color (r : ray) (world : hittable_list) (depth : int) =
       (new vec3 [| 1.0; 1.0; 1.0 |] *= (1.0 -. t))
       +| (new vec3 [| 0.5; 0.7; 1.0 |] *= t)
 
-(* World *)
-let material_ground =
-  new_pointer (new lambertian (new vec3 [| 0.8; 0.8; 0.0 |]))
-
-let material_center =
-  new_pointer (new lambertian (new vec3 [| 0.1; 0.2; 0.5 |]))
-
-let material_left = new_pointer (new dielectric 1.5)
-
-let material_right = new_pointer (new metal (new vec3 [| 0.8; 0.6; 0.2 |]) 0.0)
-
-let world =
-  new hittable_list
-    [|
-      new sphere (new vec3 [| 0.0; -100.5; -1.0 |]) 100.0 material_ground;
-      new sphere (new vec3 [| 0.0; 0.0; -1.0 |]) 0.5 material_center;
-      new sphere (new vec3 [| 1.0; 0.0; -1.0 |]) 0.5 material_right;
-      new sphere (new vec3 [| -1.0; 0.0; -1.0 |]) 0.5 material_left;
-      new sphere (new vec3 [| -1.0; 0.0; -1.0 |]) (-0.45) material_left;
-    |]
+(* world *)
+let world: hittable_list = random_scene
 
 (* Render *)
 let basic (content : vec3 array array) : vec3 array array =

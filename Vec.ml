@@ -68,9 +68,6 @@ let to_string (v : vec3) =
   ^ " "
   ^ Int.to_string (int_of_float v#z)
 
-let random_vec =
-  new vec3 [| random_float 1.0; random_float 1.0; random_float 1.0 |]
-
 let random_vec_n_m n m =
   new vec3
     [| random_float_n_m n m; random_float_n_m n m; random_float_n_m n m |]
@@ -78,6 +75,10 @@ let random_vec_n_m n m =
 let rec random_in_unit_sphere (aa : int) =
   let p = random_vec_n_m (-1.0) 1.0 in
   if p#length_squared >. 1.0 then random_in_unit_sphere aa else p
+
+let rec random_in_unit_disk (aa : int) =
+  let p = new vec3 [|random_float_n_m (-1.0) 1.0; random_float_n_m (-1.0) 1.0; 0.0|] in
+  if p#length_squared >. 1.0 then random_in_unit_disk aa else p
 
 (* For metal *)
 let reflect (v : vec3) n = v -| (n *= (dot v n *. 2.0))
