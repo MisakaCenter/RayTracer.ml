@@ -14,25 +14,15 @@ open Material
 (* Image *)
 let aspect_ratio = 16.0 /. 9.0
 
-<<<<<<< HEAD
 let image_width : int = 400
-=======
-let image_width : int = 800
->>>>>>> cc819279570d5003bd1adaae7e7d22858f3594ea
 
 let image_height : int = int_of_float (float_of_int image_width /. aspect_ratio)
 
 let color : int = 255
 
-<<<<<<< HEAD
-let samples_per_pixel = 10
-
-let max_depth = 2
-=======
 let max_depth : int = 50
 
-let samples_per_pixel = 200
->>>>>>> cc819279570d5003bd1adaae7e7d22858f3594ea
+let samples_per_pixel = 10
 
 let target_file : string = "./output/out.ppm"
 
@@ -100,15 +90,10 @@ let material_right = new_pointer (new metal (new vec3 [| 0.8; 0.6; 0.2 |]) 1.0)
 let world =
   new hittable_list
     [|
-<<<<<<< HEAD
-      new sphere (new vec3 [| 0.0; 0.0; -1.0 |]) 0.5 (new_pointer (new lambertia (new vec3 [|0.8;0.8;0.0|]) 1));
-      new sphere (new vec3 [| 0.0; -100.5; -1.0 |]) 100.0 (new_pointer (new lambertia (new vec3 [|0.8;0.8;0.0|]) 1));
-=======
       new sphere (new vec3 [| 0.0; -100.5; -1.0 |]) 100.0 material_ground;
       new sphere (new vec3 [| 0.0; 0.0; -1.0 |]) 0.5 material_center;
       new sphere (new vec3 [| 1.0; 0.0; -1.0 |]) 0.5 material_right;
       new sphere (new vec3 [| -1.0; 0.0; -1.0 |]) 0.5 material_left;
->>>>>>> cc819279570d5003bd1adaae7e7d22858f3594ea
     |]
 
 (* Render *)

@@ -71,16 +71,6 @@ let to_string (v : vec3) =
   ^ " "
   ^ Int.to_string (int_of_float v#z)
 
-<<<<<<< HEAD
-  let random_vec = new vec3 [|random_float 1.0; random_float 1.0; random_float 1.0|]
-  let random_vec_n_m n m = new vec3 [|random_float_n_m n m; random_float_n_m n m; random_float_n_m n m|]
-  
-  let rec random_in_unit_sphere (aa: int) = 
-    let p = random_vec_n_m (-. 1.0) 1.0 in
-      if (p#length_squared >. 1.0) then 
-        random_in_unit_sphere aa else p
-let random_unit_vector = unit_vector (random_in_unit_sphere 1)
-=======
 
 let random_vec =
   new vec3 [| random_float 1.0; random_float 1.0; random_float 1.0 |]
@@ -92,6 +82,5 @@ let random_vec_n_m n m =
 let rec random_in_unit_sphere (aa : int) =
   let p = random_vec_n_m (-1.0) 1.0 in
   if p#length_squared >. 1.0 then random_in_unit_sphere aa else p
->>>>>>> cc819279570d5003bd1adaae7e7d22858f3594ea
 
 let reflect (v : vec3) n = v -| (n *= (dot v n *. 2.0))
