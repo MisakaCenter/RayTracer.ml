@@ -79,4 +79,12 @@ let rec random_in_unit_sphere (aa : int) =
   let p = random_vec_n_m (-1.0) 1.0 in
   if p#length_squared >. 1.0 then random_in_unit_sphere aa else p
 
+(* For metal *)
 let reflect (v : vec3) n = v -| (n *= (dot v n *. 2.0))
+
+(* For glass *)
+let refract (uv: vec3) (n: vec3) (etai_over_etat: float): vec3 =
+  let cos_theta = min (dot (rev uv) n) 1.0 in
+  let r_out_perp = (uv +| (n *= cos_theta) ) *= etai_over_etat in
+  let r_out_parallel = n *= (- sqrt (abs (1.0 -. r_out_perp#length_squared))) in
+  r_out_perp +| r_out_parallel

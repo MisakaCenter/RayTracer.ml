@@ -9,44 +9,8 @@ open Sphere
 open Hittable
 open Hittable_list
 open Utils
-
-(* Image *)
-let aspect_ratio = 16.0 /. 9.0
-
-let image_width : int = 400
-
-let image_height : int = int_of_float (float_of_int image_width /. aspect_ratio)
-
-let color : int = 255
-
-let max_depth : int = 50
-
-let focal_length : float = 1.0
-
-let samples_per_pixel = 20
-
-let target_file : string = "./output/out.ppm"
-
-(* Camera *)
-
-let viewport_height = 2.0
-
-let viewport_width = aspect_ratio *. viewport_height
-
-let origin = new vec3 [| 0.0; 0.0; 0.0 |]
-
-let horizontal = new vec3 [| viewport_width; 0.0; 0.0 |]
-
-let vertical = new vec3 [| 0.0; viewport_height; 0.0 |]
-
-let lower_left_corner =
-  origin -| (horizontal /= 2.0) -| (vertical /= 2.0)
-  -| new vec3 [| 0.0; 0.0; focal_length |]
-
-let get_ray u v : ray =
-  new ray
-    origin
-    (lower_left_corner +| (horizontal *= u) +| (vertical *= v) -| origin)
+open Setting
+open Camera
 
 (* Ray Color *)
 
@@ -80,11 +44,11 @@ let material_ground =
   new_pointer (new lambertian (new vec3 [| 0.8; 0.8; 0.0 |]))
 
 let material_center =
-  new_pointer (new lambertian (new vec3 [| 0.7; 0.3; 0.3 |]))
+  new_pointer (new lambertian (new vec3 [| 0.1; 0.2; 0.5 |]))
 
-let material_left = new_pointer (new metal (new vec3 [| 0.8; 0.8; 0.8 |]) 0.3)
+let material_left = new_pointer (new dielectric 1.5)
 
-let material_right = new_pointer (new metal (new vec3 [| 0.8; 0.6; 0.2 |]) 1.0)
+let material_right = new_pointer (new metal (new vec3 [| 0.8; 0.6; 0.2 |]) 0.0)
 
 let world =
   new hittable_list
@@ -93,12 +57,13 @@ let world =
       new sphere (new vec3 [| 0.0; 0.0; -1.0 |]) 0.5 material_center;
       new sphere (new vec3 [| 1.0; 0.0; -1.0 |]) 0.5 material_right;
       new sphere (new vec3 [| -1.0; 0.0; -1.0 |]) 0.5 material_left;
+      new sphere (new vec3 [| -1.0; 0.0; -1.0 |]) (-0.45) material_left;
     |]
 
 (* Render *)
 let basic (content : vec3 array array) : vec3 array array =
+  let t_start = Unix.gettimeofday () in
   for j = image_height - 1 downto 0 do
-    if j % 20 = 0 then printf "Remaining: %d\n" j;
     for i = 0 to image_width - 1 do
       let pixel_color = new_pointer (new vec3 [| 0.0; 0.0; 0.0 |]) in
 
@@ -118,6 +83,7 @@ let basic (content : vec3 array array) : vec3 array array =
       set (get content (image_height - j - 1)) i !^pixel_color
     done
   done;
+  printf "Ray Tracing finished in %.1f s.\n" (Unix.gettimeofday () -. t_start);
   content
 
 ;;

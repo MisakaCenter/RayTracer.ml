@@ -67,3 +67,28 @@ class metal a b =
       attenuation ^:= albedo;
       dot !^scattered#direction rcd.normal >. 0.0
   end
+
+(* Use Schlick's approximation for reflectance. *)
+let reflectance cosine ref_idx = 
+  let r0 = (1.0 -. ref_idx) /. (1.0 +. ref_idx) in
+  let r0 = r0 *. r0 in
+  r0 +. ((1.0 -. r0) *. ((1.0 -. cosine) ** 5.0))
+
+class dielectric a =
+  object
+    val mutable ir : float = a
+
+    method scatter (r_in : ray) (rcd : hit_record) (attenuation : vec3 pointer)
+        (scattered : ray pointer) =
+      attenuation ^:= new vec3 [| 1.0; 1.0; 1.0 |];
+      let refraction_ratio = if rcd.front_face then 1.0 /. ir else ir in
+      let unit_direction = unit_vector r_in#direction in
+
+      let cos_theta = min (dot (rev unit_direction) rcd.normal) 1.0 in
+      let sin_theta = sqrt (1.0 -. (cos_theta *. cos_theta)) in
+      let cannot_refract = refraction_ratio *. sin_theta >. 1.0 in
+      let direction = if cannot_refract || (reflectance cos_theta refraction_ratio >. random_float 1.0) then reflect unit_direction rcd.normal else refract unit_direction rcd.normal refraction_ratio in
+      scattered ^:= new ray rcd.p direction;
+      true
+  end
+
