@@ -19,5 +19,3 @@ let output pm target_file a =
     pm.max_color;
   output_ppm_matrix pm.max_color pm.content outc a;
   Out_channel.close outc
-
-

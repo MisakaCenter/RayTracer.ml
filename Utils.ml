@@ -1,5 +1,5 @@
-open Random
-
+open Core
+open Float
 let pi = 3.1415926535897932385
 
 let infinity = infinity
@@ -19,9 +19,9 @@ let ( ^:= ) p v =
 
 let new_pointer x = Pointer (ref x)
 
-let random_float n = float n
+let random_float n = Random.float n
 
-let random_float_n_m n m = n +. ((m -. n) *. random_float 1.0)
+let random_float_n_m n m = n +. ((m -. n) *. (random_float 1.0))
 
 let clamp (x : float) min max : float =
-  if compare x min < 0 then min else if compare x max > 0 then max else x
+  if x <. min then min else if x >. max then max else x

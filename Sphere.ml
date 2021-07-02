@@ -1,13 +1,12 @@
 open Base
-open Core
 open Vec
 open Ray
 open Hittable
 open Utils
+open Core
 open Float
-open Material
 
-class sphere cen r (m : material pointer) =
+class sphere cen r (m : hit_record material_meta pointer) =
   object
     inherit hittable
 
@@ -24,13 +23,13 @@ class sphere cen r (m : material pointer) =
       let half_b = dot oc r#direction in
       let c = oc#length_squared -. (radius *. radius) in
       let discriminant = (half_b *. half_b) -. (a *. c) in
-      if Float.compare discriminant 0.0 < 0 then false
+      if discriminant <. 0.0 then false
       else
         let sqrtd = sqrt discriminant in
         let root = (0.0 -. half_b -. sqrtd) /. a in
-        if Float.compare root t_min < 0 || Float.compare root t_max > 0 then (
+        if root <. t_min || root >. t_max then (
           let root = (0.0 -. half_b +. sqrtd) /. a in
-          if Float.compare root t_min < 0 || Float.compare root t_max > 0 then
+          if root <. t_min || root >. t_max then
             false
           else
             let p = at r root in

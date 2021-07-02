@@ -12,4 +12,4 @@ class ray (o : vec3) (d : vec3) =
     method direction = direc
   end
 
-let at (r : ray) (t : float) =  r#origin +| (r#direction *= t)
+let at (r : ray) (t : float) = r#origin +| (r#direction *= t)

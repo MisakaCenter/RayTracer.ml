@@ -9,8 +9,7 @@ open Sphere
 open Hittable
 open Hittable_list
 open Utils
-open Camera
-open Material
+
 (* Image *)
 let aspect_ratio = 16.0 /. 9.0
 
@@ -22,7 +21,9 @@ let color : int = 255
 
 let max_depth : int = 50
 
-let samples_per_pixel = 10
+let focal_length : float = 1.0
+
+let samples_per_pixel = 20
 
 let target_file : string = "./output/out.ppm"
 
@@ -31,8 +32,6 @@ let target_file : string = "./output/out.ppm"
 let viewport_height = 2.0
 
 let viewport_width = aspect_ratio *. viewport_height
-
-let max_depth = 50
 
 let origin = new vec3 [| 0.0; 0.0; 0.0 |]
 
