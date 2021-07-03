@@ -1,7 +1,7 @@
 open Setting
-open Vec
-open Ray
-open Utils
+open Raytracerml.Vec
+open Raytracerml.Ray
+open Raytracerml.Utils
 
 let theta = degrees_to_radians vfov
 

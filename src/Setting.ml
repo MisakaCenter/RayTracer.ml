@@ -1,9 +1,9 @@
-open Vec
+open Raytracerml.Vec
 
 (* Image *)
 let aspect_ratio = 3.0 /. 2.0
 
-let image_width : int = 400
+let image_width : int = 4
 
 let image_height : int = int_of_float (float_of_int image_width /. aspect_ratio)
 

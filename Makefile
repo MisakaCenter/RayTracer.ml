@@ -1,6 +1,6 @@
 all:
 	dune build 
-	dune exec -- ./main.exe
+	dune exec -- ./src/main.exe
 	python3 ppm_to_png.py
 clean:
 	rm -rf ./output/*.ppm

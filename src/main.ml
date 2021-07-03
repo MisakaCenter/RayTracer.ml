@@ -2,24 +2,21 @@ open Base
 open Stdlib
 open Array
 open Core
-open Vec
-open Ppm
-open Ray
-open Hittable
-open Hittable_list
-open Utils
 open Setting
 open Camera
-open World
+open Raytracerml
+open Raytracerml.Utils
+open Raytracerml.Vec
+open Raytracerml.Ppm
 
 (* Ray Color *)
 
-let rec ray_color (r : ray) (world : hittable_list) (depth : int) =
+let rec ray_color (r : Ray.ray) (world : Hittable_list.hittable_list) (depth : int) =
   if depth <= 0 then new vec3 [| 0.0; 0.0; 0.0 |]
   else
     let rcd =
       new_pointer
-        {
+       Hittable.{
           p = new vec3 [||];
           normal = new vec3 [||];
           t = 0.0;
@@ -28,7 +25,7 @@ let rec ray_color (r : ray) (world : hittable_list) (depth : int) =
         }
     in
     if world#hit r 0.001 infinity rcd then
-      let scattered = new_pointer (new ray (new vec3 [||]) (new vec3 [||])) in
+      let scattered = new_pointer (new Ray.ray (new vec3 [||]) (new vec3 [||])) in
       let attenuation = new_pointer (new vec3 [| 1.0; 1.0; 1.0 |]) in
       if !^(!^rcd.mat_ptr)#scatter r !^rcd attenuation scattered then
         !^attenuation *| ray_color !^scattered world (depth - 1)
@@ -40,7 +37,7 @@ let rec ray_color (r : ray) (world : hittable_list) (depth : int) =
       +| (new vec3 [| 0.5; 0.7; 1.0 |] *= t)
 
 (* world *)
-let world: hittable_list = random_scene
+let world: Hittable_list.hittable_list = World.random_scene
 
 (* Render *)
 let basic (content : vec3 array array) : vec3 array array =

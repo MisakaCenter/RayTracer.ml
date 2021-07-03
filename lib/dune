@@ -1,0 +1,4 @@
+(library
+ (name raytracerml)
+ (libraries base stdio stdlib core)
+)
