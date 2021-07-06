@@ -23,5 +23,6 @@ let random_float n = Random.float n
 
 let random_float_n_m n m = n +. ((m -. n) *. (random_float 1.0))
 
+let random_int_n_m n m = Random.int_incl n m
 let clamp (x : float) min max : float =
   if x <. min then min else if x >. max then max else x

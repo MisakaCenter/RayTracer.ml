@@ -3,7 +3,9 @@ open Vec
 open Ray
 open Core
 open Float
+open Aabb
 open Utils
+open Texture
 
 class virtual ['a] material_meta =
   object
@@ -16,16 +18,19 @@ type hit_record = {
   t : float;
   front_face : bool;
   mat_ptr : hit_record material_meta pointer;
+  u: float;
+  v: float
 }
 
 let set_face_normal h (r : ray) (outward_normal : vec3) =
   let ff = dot r#direction outward_normal <. 0.0 in
   let n = if ff then outward_normal else rev outward_normal in
-  { p = h.p; normal = n; t = h.t; front_face = ff; mat_ptr = h.mat_ptr }
+  { p = h.p; normal = n; t = h.t; front_face = ff; mat_ptr = h.mat_ptr; u = h.u; v = h.v }
 
 class virtual hittable =
   object
     method virtual hit : ray -> float -> float -> hit_record pointer -> bool
+    method virtual bounding_box : float -> float -> aabb pointer -> bool
   end
 
 class virtual material =
@@ -38,7 +43,7 @@ class virtual material =
 
 class lambertian a =
   object
-    val mutable albedo : vec3 = a
+    val mutable albedo : texture pointer = a
 
     method scatter (r_in : ray) (rcd : hit_record) (attenuation : vec3 pointer)
         (scattered : ray pointer) =
@@ -47,7 +52,7 @@ class lambertian a =
       in
       if !^scatter_direction#near_zero then scatter_direction ^:= rcd.normal;
       scattered ^:= new ray rcd.p !^scatter_direction (r_in#time);
-      attenuation ^:= albedo;
+      attenuation ^:= (!^albedo)#value rcd.u rcd.v rcd.p;
       true
   end
 
@@ -80,7 +85,7 @@ class dielectric a =
 
     method scatter (r_in : ray) (rcd : hit_record) (attenuation : vec3 pointer)
         (scattered : ray pointer) =
-      attenuation ^:= new vec3 [| 1.0; 1.0; 1.0 |];
+      attenuation ^:=  new vec3 [| 1.0; 1.0; 1.0 |];
       let refraction_ratio = if rcd.front_face then 1.0 /. ir else ir in
       let unit_direction = unit_vector r_in#direction in
 
@@ -91,3 +96,6 @@ class dielectric a =
       scattered ^:= new ray rcd.p direction (r_in#time);
       true
   end
+
+
+let init_material = new lambertian (new_pointer (new solid_color (new vec3 [| 0.0; 0.0; 0.0 |])))

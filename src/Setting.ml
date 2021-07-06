@@ -5,7 +5,7 @@ open Raytracerml.World
 (* Image *)
 let aspect_ratio = 16.0 /. 9.0
 
-let image_width : int = 400
+let image_width : int = 200
 
 let image_height : int = int_of_float (float_of_int image_width /. aspect_ratio)
 
@@ -41,4 +41,4 @@ let time1 = 1.0
 
 (* world *)
 (* let world: hittable_list = random_scene *)
-let world: hittable_list = sphere_sea
+let world: hittable_list = random_scene

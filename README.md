@@ -23,7 +23,7 @@ make
 - let aspect_ratio = 3.0 /. 2.0
 - let image_width : int = 400
 
-#### Result: (Intel i7-8750H CPU @ 2.20GHz)
+#### Result: (Intel i7-8750H CPU @ 2.20GHz) (Random Scene)
 
 ```
 Ray Tracing finished in 1474.2 s.
@@ -35,19 +35,9 @@ Random Scene               |Sphere Sea                 |Sphere Sea (hd)
 
 ### Ray Tracing: The Next Week
 
-#### Settings:
-
-- let samples_per_pixel = 100
-- let max_depth : int = 50
-- let aspect_ratio = 16.0 /. 2.0
-- let image_width : int = 400
 
 #### Result: (Intel i7-8750H CPU @ 2.20GHz)
 
-```
-Ray Tracing finished in 2071.7 s.
-```
-
-Bouncing spheres           |  *
+Bouncing spheres (2071.7 s)| Texture (531.9 s)
 :-------------------------:|:-------------------------:
-<img src="https://z3.ax1x.com/2021/07/06/RI43TK.png" height = 300 alt="">  |  
+<img src="https://z3.ax1x.com/2021/07/06/RI43TK.png" height = 300 alt="">  |  <img src="https://z3.ax1x.com/2021/07/06/R7NOhV.png" height = 300 alt=""> 

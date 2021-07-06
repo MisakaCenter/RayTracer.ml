@@ -5,18 +5,17 @@ open Utils
 open Vec
 open Sphere
 open Float
-
+open Texture
 (* World *)
 
 let random_scene =
   let lst = new_pointer (new hittable_list [||]) in
 
-  let ground_material =
-    new_pointer (new lambertian (new vec3 [| 0.5; 0.5; 0.5 |]))
-  in
+  let checker =
+    new checker_texture (new solid_color (new vec3 [| 0.2; 0.3; 0.1 |])) (new solid_color (new vec3 [| 0.9; 0.9; 0.9 |])) in 
   lst
   ^:= !^lst#add
-        (new sphere (new vec3 [| 0.0; -1000.0; 0.0 |]) 1000.0 ground_material);
+        (new sphere (new vec3 [| 0.0; -1000.0; 0.0 |]) 1000.0 (new_pointer (new lambertian (new_pointer checker)))) ;
 
   for a = -11 to 10 do
     for b = -11 to 10 do
@@ -32,12 +31,12 @@ let random_scene =
 
       if (center -| new vec3 [| 4.0; 0.2; 0.0 |])#length >. 0.9 then
         let sphere_material =
-          new_pointer (new lambertian (new vec3 [| 0.5; 0.5; 0.5 |]))
+          new_pointer (new lambertian (new_pointer(new solid_color (new vec3 [| 0.5; 0.5; 0.5 |]))))
         in
         if choose_mat <. 0.7 then (
           (* diffuse *)
           let albedo = (random_vec_n_m 0.0 1.0) *| (random_vec_n_m 0.0 1.0) in
-          sphere_material ^:= new lambertian albedo;
+          sphere_material ^:= new lambertian (new_pointer(new solid_color albedo));
           let center2 = center +| new vec3 [|0.0; random_float_n_m 0.0 0.5; 0.0|] in
           lst ^:= !^lst#add (new moving_sphere center center2 0.0 1.0 0.2 sphere_material))
         else if choose_mat <. 0.85 then (
@@ -58,7 +57,7 @@ let random_scene =
     done
   done;
 
-  let material1 = new_pointer (new lambertian (new vec3 [| 0.4; 0.2; 0.1 |])) in
+  let material1 = new_pointer (new lambertian (new_pointer ((new solid_color (new vec3 [| 0.4; 0.2; 0.1 |]))))) in
   lst ^:= !^lst#add (new sphere (new vec3 [| -4.0; 1.0; 0.0 |]) 1.0 material1);
 
   let material2 = new_pointer (new metal (new vec3 [| 0.7; 0.6; 0.5 |]) 0.0) in
@@ -84,12 +83,12 @@ let random_scene =
               |]
           in
             let sphere_material =
-              new_pointer (new lambertian (new vec3 [| 0.5; 0.5; 0.5 |]))
+              new_pointer (new lambertian (new_pointer ((new solid_color (new vec3 [| 0.5; 0.5; 0.5 |])))))
             in
             if choose_mat <. 0.25 then (
               (* diffuse *)
               let albedo = (random_vec_n_m 0.0 1.0) *| (random_vec_n_m 0.0 1.0) in
-              sphere_material ^:= new lambertian albedo;
+              sphere_material ^:= new lambertian (new_pointer(new solid_color albedo));
               lst ^:= !^lst#add (new sphere center (0.2 +. random_float 0.2) sphere_material))
             else if choose_mat <. 0.5 then (
               (* metal *)

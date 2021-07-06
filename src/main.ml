@@ -8,6 +8,7 @@ open Raytracerml
 open Raytracerml.Utils
 open Raytracerml.Vec
 open Raytracerml.Ppm
+open Raytracerml.Texture
 
 (* Ray Color *)
 
@@ -21,7 +22,9 @@ let rec ray_color (r : Ray.ray) (world : Hittable_list.hittable_list) (depth : i
           normal = new vec3 [||];
           t = 0.0;
           front_face = false;
-          mat_ptr = new_pointer (new lambertian (new vec3 [||]));
+          mat_ptr = new_pointer (new lambertian (new_pointer ((new solid_color (new vec3 [| 0.0; 0.0; 0.0 |])))));
+          u = 0.0;
+          v = 0.0
         }
     in
     if world#hit r 0.001 infinity rcd then
