@@ -1,9 +1,11 @@
 open Raytracerml.Vec
+open Raytracerml.Hittable_list
+open Raytracerml.World
 
 (* Image *)
-let aspect_ratio = 3.0 /. 2.0
+let aspect_ratio = 16.0 /. 9.0
 
-let image_width : int = 4
+let image_width : int = 400
 
 let image_height : int = int_of_float (float_of_int image_width /. aspect_ratio)
 
@@ -31,3 +33,12 @@ let vup = new vec3 [|0.0;1.0;0.0|]
 let aperture = 0.1
 
 let focus_dist = 10.0
+
+let time0 = 0.0
+
+let time1 = 1.0
+
+
+(* world *)
+(* let world: hittable_list = random_scene *)
+let world: hittable_list = random_scene

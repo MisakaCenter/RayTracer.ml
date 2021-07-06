@@ -25,7 +25,7 @@ let rec ray_color (r : Ray.ray) (world : Hittable_list.hittable_list) (depth : i
         }
     in
     if world#hit r 0.001 infinity rcd then
-      let scattered = new_pointer (new Ray.ray (new vec3 [||]) (new vec3 [||])) in
+      let scattered = new_pointer (new Ray.ray (new vec3 [||]) (new vec3 [||]) 0.0)  in
       let attenuation = new_pointer (new vec3 [| 1.0; 1.0; 1.0 |]) in
       if !^(!^rcd.mat_ptr)#scatter r !^rcd attenuation scattered then
         !^attenuation *| ray_color !^scattered world (depth - 1)
@@ -35,9 +35,6 @@ let rec ray_color (r : Ray.ray) (world : Hittable_list.hittable_list) (depth : i
       let t = (unit_direction#y +. 1.0) *. 0.5 in
       (new vec3 [| 1.0; 1.0; 1.0 |] *= (1.0 -. t))
       +| (new vec3 [| 0.5; 0.7; 1.0 |] *= t)
-
-(* world *)
-let world: Hittable_list.hittable_list = World.random_scene
 
 (* Render *)
 let basic (content : vec3 array array) : vec3 array array =

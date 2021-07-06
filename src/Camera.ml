@@ -27,9 +27,14 @@ let lower_left_corner =
 
 let lens_radius = aperture /. 2.0
 
+let _time0 = time0
+
+let _time1 = time1
+
 let get_ray s t : ray =
   let rd = (random_in_unit_disk 1) *= lens_radius in
   let offset = (u *= rd#x) +| (v *= rd#y) in
   new ray
     (origin +| offset)
     (lower_left_corner +| (horizontal *= s) +| (vertical *= t) -| origin -| offset)
+    (random_float_n_m _time0 _time1)

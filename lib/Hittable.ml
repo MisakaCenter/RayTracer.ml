@@ -40,13 +40,13 @@ class lambertian a =
   object
     val mutable albedo : vec3 = a
 
-    method scatter (_ : ray) (rcd : hit_record) (attenuation : vec3 pointer)
+    method scatter (r_in : ray) (rcd : hit_record) (attenuation : vec3 pointer)
         (scattered : ray pointer) =
       let scatter_direction =
         new_pointer (rcd.normal +| unit_vector (random_in_unit_sphere 1))
       in
       if !^scatter_direction#near_zero then scatter_direction ^:= rcd.normal;
-      scattered ^:= new ray rcd.p !^scatter_direction;
+      scattered ^:= new ray rcd.p !^scatter_direction (r_in#time);
       attenuation ^:= albedo;
       true
   end
@@ -63,7 +63,7 @@ class metal a b =
       scattered
       ^:= new ray
             rcd.p
-            (reflected +| (unit_vector (random_in_unit_sphere 1) *= fuzz));
+            (reflected +| (unit_vector (random_in_unit_sphere 1) *= fuzz))(r_in#time);
       attenuation ^:= albedo;
       dot !^scattered#direction rcd.normal >. 0.0
   end
@@ -88,7 +88,6 @@ class dielectric a =
       let sin_theta = sqrt (1.0 -. (cos_theta *. cos_theta)) in
       let cannot_refract = refraction_ratio *. sin_theta >. 1.0 in
       let direction = if cannot_refract || (reflectance cos_theta refraction_ratio >. random_float 1.0) then reflect unit_direction rcd.normal else refract unit_direction rcd.normal refraction_ratio in
-      scattered ^:= new ray rcd.p direction;
+      scattered ^:= new ray rcd.p direction (r_in#time);
       true
   end
-
