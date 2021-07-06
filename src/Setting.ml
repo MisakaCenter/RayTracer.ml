@@ -17,7 +17,7 @@ let focal_length : float = 1.0
 
 let samples_per_pixel = 100
 
-let target_file : string = "./output/out.ppm"
+let target_file : string = "./output/out3.ppm"
 
 (* Camera *)
 
@@ -41,4 +41,4 @@ let time1 = 1.0
 
 (* world *)
 (* let world: hittable_list = random_scene *)
-let world: hittable_list = random_scene
+let world: hittable_list = sphere_sea
