@@ -28,10 +28,10 @@ make
 ```
 Ray Tracing finished in 1474.2 s.
 ```
+Random Scene               |  Sphere Sea
+:-------------------------:|:-------------------------:
+<img src="https://z3.ax1x.com/2021/07/03/R2tV3V.png" height = 300 alt="">  |  <img src="https://z3.ax1x.com/2021/07/03/RRdt9s.png" height = 300 alt="" >
 
-<img src="https://z3.ax1x.com/2021/07/03/R2tV3V.png" width = 50% alt="" align=left>
-
-<img src="https://z3.ax1x.com/2021/07/03/RRdt9s.png" width = 50% alt="" align=right>
 
 
 ### Ray Tracing: The Next Week
@@ -48,4 +48,7 @@ Ray Tracing finished in 1474.2 s.
 ```
 Ray Tracing finished in 2071.7 s.
 ```
-<img src="https://z3.ax1x.com/2021/07/06/RI43TK.png" width = 100% alt="" align=right>
+
+Bouncing spheres           |  *
+:-------------------------:|:-------------------------:
+<img src="https://z3.ax1x.com/2021/07/06/RI43TK.png" height = 300 alt="">  |  
