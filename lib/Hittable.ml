@@ -10,6 +10,7 @@ open Texture
 class virtual ['a] material_meta =
   object
     method virtual scatter : ray -> 'a -> vec3 pointer -> ray pointer -> bool
+    method virtual emitted :float->float->vec3->vec3
   end
 
 type hit_record = {
@@ -39,10 +40,12 @@ class virtual material =
 
     method virtual scatter
         : ray -> hit_record -> vec3 pointer -> ray pointer -> bool
+    method virtual emitted :float->float->vec3->vec3
   end
 
 class lambertian a =
   object
+    inherit material
     val mutable albedo : texture pointer = a
 
     method scatter (r_in : ray) (rcd : hit_record) (attenuation : vec3 pointer)
@@ -54,10 +57,24 @@ class lambertian a =
       scattered ^:= new ray rcd.p !^scatter_direction (r_in#time);
       attenuation ^:= (!^albedo)#value rcd.u rcd.v rcd.p;
       true
+    method emitted (_:float)(_:float)(_:vec3):vec3 = new vec3 [|0.0;0.0;0.0|]
+  end
+
+class diffuse_light a =
+  object
+    inherit material
+    val mutable emit : texture pointer = a
+
+    method scatter (_ : ray) (_ : hit_record) (_ : vec3 pointer)
+        (_ : ray pointer) =
+      false
+    method emitted (u:float)(v:float)(p:vec3):vec3 = 
+      (!^ emit)#value u v p
   end
 
 class metal a b =
   object
+    inherit material
     val mutable albedo : vec3 = a
 
     val mutable fuzz : float = b
@@ -71,6 +88,7 @@ class metal a b =
             (reflected +| (unit_vector (random_in_unit_sphere 1) *= fuzz))(r_in#time);
       attenuation ^:= albedo;
       dot !^scattered#direction rcd.normal >. 0.0
+    method emitted (_:float)(_:float)(_:vec3):vec3 = new vec3 [|0.0;0.0;0.0|]
   end
 
 (* Use Schlick's approximation for reflectance. *)
@@ -81,6 +99,7 @@ let reflectance cosine ref_idx =
 
 class dielectric a =
   object
+    inherit material
     val mutable ir : float = a
 
     method scatter (r_in : ray) (rcd : hit_record) (attenuation : vec3 pointer)
@@ -95,6 +114,7 @@ class dielectric a =
       let direction = if cannot_refract || (reflectance cos_theta refraction_ratio >. random_float 1.0) then reflect unit_direction rcd.normal else refract unit_direction rcd.normal refraction_ratio in
       scattered ^:= new ray rcd.p direction (r_in#time);
       true
+    method emitted (_:float)(_:float)(_:vec3):vec3 = new vec3 [|0.0;0.0;0.0|]
   end
 
 

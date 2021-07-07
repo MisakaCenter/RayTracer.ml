@@ -6,6 +6,7 @@ open Vec
 open Sphere
 open Float
 open Texture
+open Aarect
 (* World *)
 
 let random_scene =
@@ -110,3 +111,19 @@ let random_scene =
       done
     done;
     !^ lst
+
+let simple_light =
+  let lst = new_pointer (new hittable_list [||]) in
+  let checker =
+    new checker_texture (new solid_color (new vec3 [| 0.2; 0.3; 0.1 |])) (new solid_color (new vec3 [| 0.9; 0.9; 0.9 |])) in 
+  lst
+  ^:= !^lst#add
+        (new sphere (new vec3 [| 0.0; -1000.0; 0.0 |]) 1000.0 (new_pointer (new lambertian (new_pointer checker)))) ;
+  lst
+  ^:= !^lst#add
+        (new sphere (new vec3 [| 0.0; 2.0; 0.0 |]) 2.0 (new_pointer (new lambertian (new_pointer checker)))) ;
+  let difflight = new diffuse_light (new_pointer (new solid_color (new vec3 [| 4.0; 4.0; 4.0 |]))) in
+  lst
+  ^:= !^lst#add
+        (new xy_rect 3.0 5.0 1.0 3.0 (-2.0) (new_pointer difflight)) ;
+  !^lst

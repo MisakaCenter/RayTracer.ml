@@ -38,6 +38,6 @@ Random Scene               |Sphere Sea                 |Sphere Sea (hd)
 
 #### Result: (Intel i7-8750H CPU @ 2.20GHz)
 
-Bouncing spheres (2071.7 s)| Texture (531.9 s)
-:-------------------------:|:-------------------------:
-<img src="https://z3.ax1x.com/2021/07/06/RI43TK.png" height = 300 alt="">  |  <img src="https://z3.ax1x.com/2021/07/06/R7NOhV.png" height = 300 alt=""> 
+Bouncing spheres (2071.7 s)| Texture (531.9 s)         | Light (1654.9 s)
+:-------------------------:|:-------------------------:|:-------------------------:
+<img src="https://z3.ax1x.com/2021/07/06/RI43TK.png" height = 300 alt="">  |  <img src="https://z3.ax1x.com/2021/07/06/R7NOhV.png" height = 300 alt="">  | <img src="https://z3.ax1x.com/2021/07/07/RHL2uV.png" height = 300 alt="">
