@@ -7,6 +7,7 @@ open Sphere
 open Float
 open Texture
 open Aarect
+open Box
 (* World *)
 
 let random_scene =
@@ -126,4 +127,24 @@ let simple_light =
   lst
   ^:= !^lst#add
         (new xy_rect 3.0 5.0 1.0 3.0 (-2.0) (new_pointer difflight)) ;
+  !^lst
+
+let cornell_box =
+  let lst = new_pointer (new hittable_list [||]) in
+  let red = new_pointer (new lambertian (new_pointer (new solid_color (new vec3 [|0.65;0.05;0.05|])))) in
+  let white = new_pointer (new lambertian (new_pointer (new solid_color (new vec3 [|0.73;0.73;0.73|])))) in
+  let green = new_pointer (new lambertian (new_pointer (new solid_color (new vec3 [|0.12;0.45;0.15|])))) in
+  let light = new_pointer (new diffuse_light (new_pointer (new solid_color (new vec3 [|15.0;15.0;15.0|])))) in
+  lst ^:= !^lst#add (new yz_rect 0.0 555.0 0.0 555.0 555.0 green);
+  lst ^:= !^lst#add (new yz_rect 0.0 555.0 0.0 555.0 0.0 red);
+  lst ^:= !^lst#add (new xz_rect 213.0 343.0 227.0 332.0 554.0 light);
+  lst ^:= !^lst#add (new xz_rect 0.0 555.0 0.0 555.0 0.0  white);
+  lst ^:= !^lst#add (new xz_rect 0.0 555.0 0.0 555.0 555.0  white);
+  lst ^:= !^lst#add (new xy_rect 0.0 555.0 0.0 555.0 555.0  white);
+  let box1 = new_pointer (new box (new vec3 [|0.0;0.0;0.0|]) (new vec3 [|165.0;330.0;165.0|]) white) in
+  let box1_rot = new translate (new_pointer (new rotate_y box1 15.0)) (new vec3 [|265.0;0.0;295.0|]) in
+  lst ^:= !^lst#add box1_rot;
+  let box2 = new_pointer (new box (new vec3 [|0.0;0.0;0.0|]) (new vec3 [|165.0;165.0;165.0|]) white) in
+  let box2_rot = new translate (new_pointer (new rotate_y box2 (-18.0))) (new vec3 [|130.0;0.0;65.0|]) in
+  lst ^:= !^lst#add box2_rot;
   !^lst

@@ -6,6 +6,7 @@ open Float
 open Aabb
 open Utils
 open Texture
+open Array
 
 class virtual ['a] material_meta =
   object
@@ -117,5 +118,106 @@ class dielectric a =
     method emitted (_:float)(_:float)(_:vec3):vec3 = new vec3 [|0.0;0.0;0.0|]
   end
 
+class translate (p: hittable pointer) (displacement: vec3) =
+  object
+    inherit hittable
+    val mutable ptr = p
+    val mutable offset = displacement
+    method hit (r : ray) (t_min : float) (t_max : float)
+    (rcd : hit_record pointer) =
+      let moved_ray = new ray (r#origin -| offset) (r#direction) r#time in
+        if (not ((!^ptr)#hit moved_ray t_min t_max rcd)) then false
+        else 
+          (rcd
+          ^:= set_face_normal
+                {
+                  p = !^rcd.p +| offset;
+                  t = !^rcd.t;
+                  normal = !^rcd.normal;
+                  front_face = !^rcd.front_face;
+                  mat_ptr = !^rcd.mat_ptr;
+                  u = !^rcd.u;
+                  v = !^rcd.v
+                }
+                  moved_ray (!^rcd).normal;
+                true)
+
+    method bounding_box time0 time1 output_box = 
+      if (not ((!^ptr)#bounding_box time0 time1 output_box)) then false
+      else (
+        output_box ^:= new aabb ((!^output_box)#min +| offset) ((!^output_box)#max +| offset);
+        true
+      )
+  end
+
+class rotate_y (p: hittable pointer) (angle: float) =
+  object
+    inherit hittable
+    val mutable ptr = p
+    val mutable sin_theta = 0.0
+    val mutable cos_theta = 0.0
+    val mutable hasbox = true
+    val mutable bbox = new_pointer init_aabb
+
+    initializer 
+      let radians = degrees_to_radians angle in
+        sin_theta <- sin radians;
+        cos_theta <- cos radians;
+        hasbox <- (!^p)#bounding_box 0.0 1.0 bbox;
+        let min_vec = [|infinity;infinity;infinity|] in
+        let max_vec = [|-infinity;-infinity;-infinity|] in
+          for i = 0 to 2 do
+            for j = 0 to 2 do
+              for k = 0 to 2 do
+                let x = ((float_of_int i) *. (!^bbox#max)#x) +. ((1.0 -. (float_of_int i)) *. (!^bbox#min)#x) in
+                let y = ((float_of_int j) *. (!^bbox#max)#y) +. ((1.0 -. (float_of_int j)) *. (!^bbox#min)#y) in
+                let z = ((float_of_int k) *. (!^bbox#max)#z) +. ((1.0 -. (float_of_int k)) *. (!^bbox#min)#z) in
+                let newx = (cos_theta *. x) +. ( sin_theta *. z) in
+                let newz = (- sin_theta *. x) +. (cos_theta *. z) in
+                let tester = [|newx;y;newz|] in
+                for c = 0 to 2 do
+                  set min_vec c (min (get min_vec c) (get tester c));
+                  set max_vec c (max (get max_vec c) (get tester c))
+                done
+              done
+            done
+          done;
+          bbox <- new_pointer (new aabb (new vec3 min_vec) (new vec3 max_vec))
+
+    method hit (r : ray) (t_min : float) (t_max : float)
+    (rcd : hit_record pointer) =
+      let xx_o = r#origin#x in
+      let zz_o = r#origin#z in
+      let xx_d = r#direction#x in
+      let zz_d = r#direction#z in
+      let origin = [|((cos_theta *. xx_o) -. (sin_theta *. zz_o));r#origin#y;((sin_theta *. xx_o) +. (cos_theta *. zz_o))|] in
+      let direction = [|((cos_theta *. xx_d) -. (sin_theta *. zz_d));r#direction#y;((sin_theta *. xx_d) +. (cos_theta *. zz_d))|] in
+      let moved_ray = new ray (new vec3 origin) (new vec3 direction) r#time in
+        if (not ((!^ptr)#hit moved_ray t_min t_max rcd)) then false
+        else 
+          let xx_p = (!^rcd).p#x in
+          let zz_p = (!^rcd).p#z in
+          let xx_n = (!^rcd).normal#x in
+          let zz_n = (!^rcd).normal#z in
+          let p = [|((cos_theta *. xx_p) +. (sin_theta *. zz_p));(!^rcd).p#y;((-sin_theta *. xx_p) +. (cos_theta *. zz_p))|] in
+          let normal = [|((cos_theta *. xx_n) +. (sin_theta *. zz_n));(!^rcd).normal#y;((-sin_theta *. xx_n) +. (cos_theta *. zz_n))|] in
+          (rcd
+          ^:= set_face_normal
+                {
+                  p = (new vec3 p);
+                  t = !^rcd.t;
+                  normal = !^rcd.normal;
+                  front_face = !^rcd.front_face;
+                  mat_ptr = !^rcd.mat_ptr;
+                  u = !^rcd.u;
+                  v = !^rcd.v
+                }
+                  moved_ray (new vec3 normal);
+                true)
+
+    method bounding_box _ _ output_box = 
+        output_box ^:= !^bbox;
+        hasbox
+  end
 
 let init_material = new lambertian (new_pointer (new solid_color (new vec3 [| 0.0; 0.0; 0.0 |])))
