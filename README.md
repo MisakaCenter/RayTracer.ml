@@ -30,7 +30,7 @@ Ray Tracing finished in 1474.2 s.
 ```
 Random Scene               |Sphere Sea                 |Sphere Sea (hd)
 :-------------------------:|:-------------------------:|:-------------------------:
-<img src="https://z3.ax1x.com/2021/07/03/R2tV3V.png" height = 300 alt="">  |  <img src="https://z3.ax1x.com/2021/07/03/RRdt9s.png" height = 300 alt="" > | <img src="https://z3.ax1x.com/2021/07/06/RoZRgO.png" height = 300 alt="" >
+<img src="https://z3.ax1x.com/2021/07/03/R2tV3V.png" height = 200 alt="">  |  <img src="https://z3.ax1x.com/2021/07/03/RRdt9s.png" height = 200 alt="" > | <img src="https://z3.ax1x.com/2021/07/06/RoZRgO.png" height = 200 alt="" >
 
 
 ### Ray Tracing: The Next Week
@@ -40,4 +40,8 @@ Random Scene               |Sphere Sea                 |Sphere Sea (hd)
 
 Bouncing spheres (2071.7 s)| Texture (531.9 s)         | Light (1654.9 s)
 :-------------------------:|:-------------------------:|:-------------------------:
-<img src="https://z3.ax1x.com/2021/07/06/RI43TK.png" height = 300 alt="">  |  <img src="https://z3.ax1x.com/2021/07/06/R7NOhV.png" height = 300 alt="">  | <img src="https://z3.ax1x.com/2021/07/07/RHL2uV.png" height = 300 alt="">
+<img src="https://z3.ax1x.com/2021/07/06/RI43TK.png" height = 200 alt="">  |  <img src="https://z3.ax1x.com/2021/07/06/R7NOhV.png" height = 200 alt="">  | <img src="https://z3.ax1x.com/2021/07/07/RHL2uV.png" height = 200 alt="">
+
+Empty Cornell box (437.5 s)|Cornell box with two blocks (958.3 s)|Standard Cornell box (1165.1 s)
+:-------------------------:|:-------------------------:|:-------------------------:
+<img src="https://z3.ax1x.com/2021/07/08/RXcGNt.png" height = 400 alt="">  |  <img src="https://z3.ax1x.com/2021/07/08/RXhn3t.png" height = 400 alt="">  | <img src="https://z3.ax1x.com/2021/07/09/RXbC0P.png" height = 400 alt="">
