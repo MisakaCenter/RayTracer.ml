@@ -13,6 +13,14 @@
 
 ## Usage
 
+To set up the environment, run the following command (Ubuntu)
+
+```
+apt install opam
+opam init
+opam install dune
+```
+
 To render the scene, run the following command
 ``` 
 make
