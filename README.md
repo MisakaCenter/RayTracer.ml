@@ -1,7 +1,7 @@
 
 # RayTracer.ml
 
-🌈 Path tracer implemented in OCaml based on "[_Ray Tracing in One Weekend_](https://raytracing.github.io/books/)"
+🌈 Path tracer implemented in OCaml based on "[_Ray Tracing in One Weekend_](https://raytracing.github.io/)"
 
 ## Features
 - Defocus Blur
